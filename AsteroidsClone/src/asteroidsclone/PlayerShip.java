@@ -57,15 +57,26 @@ public class PlayerShip {
     public void moveForward() {
         double angle = Math.toRadians(facing);
         
-        xCoord += 0.5 * Math.cos(angle);
-        yCoord += 0.5 * Math.sin(angle);
+        xCoord += 0.2 * Math.cos(angle);
+        yCoord += 0.2 * Math.sin(angle);
     }
     
     public void moveBackward() {
         double angle = Math.toRadians(facing);
         
-        xCoord -= 0.5 * Math.cos(angle);
-        yCoord -= 0.5 * Math.sin(angle);
+        xCoord -= 0.2 * Math.cos(angle);
+        yCoord -= 0.2 * Math.sin(angle);
+    }
+    
+    
+    // Function to create a shot.
+    // Returns it to the main class so it can be tracked there
+    public PlayerShot shoot() {
+        double angle = Math.toRadians(facing);
+        double x = xCoord + 48 * Math.cos(angle);
+        double y = yCoord + 48 * Math.sin(angle);
+        
+        return new PlayerShot((float)x, (float)y, facing);
     }
     
     

@@ -5,6 +5,8 @@
  */
 package asteroidsclone;
 
+import asteroidsclone.exceptions.ShotTimeoutException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
@@ -23,16 +25,18 @@ public class AsteroidsClone extends BasicGame {
     int timeElapsed; // Game difficulty increases with time
     
     PlayerShip playerShip;
+    ArrayList<PlayerShot> playerShots;
     
     public AsteroidsClone() {
         super ("Asteroids?");
-        
-        timeElapsed = 0;
     }
     
     @Override
     public void init(GameContainer gc) throws SlickException {
-        playerShip = new PlayerShip(304, 224, 270);
+        timeElapsed = 0;
+        
+        playerShip = new PlayerShip(368, 268, 270);
+        playerShots = new ArrayList<>();
     }
 
     @Override
@@ -53,11 +57,23 @@ public class AsteroidsClone extends BasicGame {
         if (input.isKeyDown(Input.KEY_DOWN)) {
             playerShip.moveBackward();
         }
+        if (input.isKeyPressed(Input.KEY_SPACE)) {
+            playerShots.add(playerShip.shoot());
+        }
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
         playerShip.render(g);
+        
+        for (int i = 0; i < playerShots.size(); i++) {
+            try {
+                playerShots.get(i).render(g);
+            } catch (ShotTimeoutException s) { // We can delete this shot
+                playerShots.remove(i);
+                i--; // To prevent it from skipping over any shots
+            }
+        }
     }
 
     /**
@@ -68,7 +84,7 @@ public class AsteroidsClone extends BasicGame {
         {
                 AppGameContainer appgc;
                 appgc = new AppGameContainer(new AsteroidsClone());
-                appgc.setDisplayMode(640, 480, false);
+                appgc.setDisplayMode(800, 600, false);
                 appgc.start();
         }
         catch (SlickException ex)
